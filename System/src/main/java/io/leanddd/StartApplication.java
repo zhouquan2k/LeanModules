@@ -11,6 +11,7 @@ import io.leanddd.component.framework.MetadataProvider;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -67,7 +68,7 @@ public class StartApplication {
     }
 
     @Bean("MetadataProvider")
-    MetadataProvider metadataProvider() {
-        return new MetadataProviderImpl();
+    MetadataProvider metadataProvider(MessageSource messageSource) {
+        return new MetadataProviderImpl(messageSource);
     }
 }

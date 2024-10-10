@@ -28,7 +28,7 @@ class RolePermissions {
     );
 }
 
-@Service(value = "角色管理", type = Type.Mixed, name = "role", permissions = RolePermissions.class, permissionDomain = "role", order = 102)
+@Service(type = Type.Mixed, name = "role", permissions = RolePermissions.class, permissionDomain = "role", order = 102)
 @Named
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {

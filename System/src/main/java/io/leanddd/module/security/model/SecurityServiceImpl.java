@@ -23,6 +23,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 class SecurityPermissions {
     static final String AdminPermissions = "***";
@@ -58,7 +59,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     private void processUserPermissions(UserDetails user) {
         var userDo = (User) user;
-        var metadata = this.metadataProvider.getMetadata(null);
+        var metadata = this.metadataProvider.getMetadata(Locale.getDefault(), null);
         var permissionMap = new HashMap<String, PermissionDef>();
         metadata.getServices().forEach(func -> {
             func.getPermissions().forEach(perm -> {
@@ -83,7 +84,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public List<ServiceDef> getAllFunctionDefs() {
-        var metadata = this.metadataProvider.getMetadata(null);
+        var metadata = this.metadataProvider.getMetadata(Locale.getDefault(), null);
         return Util.toList(metadata.getServices().stream().filter(x -> x.getOrder() > 0)
                 .sorted((x, y) -> x.getOrder() - y.getOrder()));
     }

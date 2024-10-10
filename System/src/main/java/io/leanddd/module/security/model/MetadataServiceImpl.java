@@ -8,6 +8,7 @@ import io.leanddd.module.security.api.MetadataService;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Named;
+import java.util.Locale;
 
 @Service(type = Type.Mixed)
 @RequiredArgsConstructor
@@ -17,8 +18,8 @@ public class MetadataServiceImpl implements MetadataService {
     private final MetadataProvider metadataProvider;
 
     @Override
-    public Metadata getMetadata() {
-        return metadataProvider.getMetadata(null);
+    public Metadata getMetadata(Locale locale) {
+        return metadataProvider.getMetadata(locale, null);
     }
 
 }

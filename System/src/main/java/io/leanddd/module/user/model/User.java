@@ -28,6 +28,9 @@ import static io.leanddd.component.meta.Meta.BooleanEx.True;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 @MetaEntity(tableName = "t_user")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User extends BaseEntity<User> implements UserDetails, AuthInfo, DictionaryItem {
 
     private static final long serialVersionUID = 1L;
@@ -52,7 +55,7 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     private Set<UserRole> roles;
 
     @Meta(value = Type.Enum, editable = True)
-    private UserStatus status = UserStatus.Active;
+    private UserStatus status;
 
     @Meta(category = Category.Password)
     private String password;
@@ -63,7 +66,7 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     @Meta(value = Type.String, editable = True)
     private String remark;
 
-    @Meta(persistable = False)
+    @Meta(value = Type.ToMany, persistable = False)
     private Set<String> permissions;
 
     // for UserDetails interface
