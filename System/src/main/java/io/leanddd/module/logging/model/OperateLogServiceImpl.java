@@ -1,5 +1,6 @@
 package io.leanddd.module.logging.model;
 
+import io.leanddd.component.framework.Repository;
 import io.leanddd.component.logging.api.OperateLog;
 import io.leanddd.component.logging.api.OperateLogService;
 import io.leanddd.component.meta.Command;
@@ -18,7 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class OperateLogServiceImpl implements OperateLogService {
 
-    private final OperateLogRepository repository;
+    private final Repository<OperateLog> repository;
     private final OperateLogMapper mapper;
 
     @Override

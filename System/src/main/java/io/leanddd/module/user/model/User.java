@@ -131,7 +131,7 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     }
 
     public void updateMyPassword(UpdatePasswordParams params) throws BizException {
-        Util.checkBiz(passEncoder.matches(params.oldPass, this.password), "401", "原密码不正确");
+        Util.checkBiz(passEncoder.matches(params.oldPass, this.password), "401", "origin password is not correct");
         this.password = passEncoder.encode(params.newPass);
     }
 
