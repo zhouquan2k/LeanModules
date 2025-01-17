@@ -111,11 +111,11 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
         return this.username;
     }
 
-    /* constructor
-   public User(User state) {
-       this.state.setPassword(passEncoder.encode(getDefaultPassword()));
-   }
-    */
+    @Override
+    public void init() {
+        this.password = passEncoder.encode(getDefaultPassword());
+    }
+
     private String getDefaultPassword() {
         return Context.getProperty("app.user.initialPassword");
     }
