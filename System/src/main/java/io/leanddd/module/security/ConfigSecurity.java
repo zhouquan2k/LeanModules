@@ -14,7 +14,7 @@ import java.util.Objects;
 @Configuration
 public class ConfigSecurity {
 
-    @Value("${app.security.testPassword:none}")
+    @Value("${app.security.testPassword:testtest}")
     String testPassword;
 
     @Bean
