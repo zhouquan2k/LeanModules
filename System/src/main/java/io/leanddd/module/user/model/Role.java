@@ -11,6 +11,7 @@ import io.leanddd.component.meta.Meta.Type;
 import io.leanddd.component.meta.MetaEntity;
 import io.leanddd.module.user.api.Role.RoleType;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,9 +22,9 @@ import static io.leanddd.component.meta.Meta.BooleanEx.True;
 @EqualsAndHashCode(callSuper = false)
 @MetaEntity(tableName = "t_role")
 @Getter
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Role extends BaseEntity<Role> implements DictionaryItem {
 
     private static final long serialVersionUID = 1L;

@@ -15,6 +15,7 @@ import io.leanddd.component.meta.Metadata.PermissionDef;
 import io.leanddd.module.user.api.User.UserStatus;
 import io.leanddd.module.user.api.UserService.UpdatePasswordParams;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -28,9 +29,9 @@ import static io.leanddd.component.meta.Meta.BooleanEx.True;
 @Getter
 @EqualsAndHashCode(callSuper = false)
 @MetaEntity(tableName = "t_user")
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseEntity<User> implements UserDetails, AuthInfo, DictionaryItem {
 
     private static final long serialVersionUID = 1L;

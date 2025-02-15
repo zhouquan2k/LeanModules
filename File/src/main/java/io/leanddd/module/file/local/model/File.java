@@ -4,14 +4,18 @@ import io.leanddd.component.data.BaseEntity;
 import io.leanddd.component.meta.Meta;
 import io.leanddd.component.meta.Meta.Type;
 import io.leanddd.component.meta.MetaEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @MetaEntity(tableName = "t_file")
 @EqualsAndHashCode(callSuper = false)
 @Getter
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 public class File extends BaseEntity<File> {
     private static final long serialVersionUID = 1L;
     @Meta(Type.ID)
