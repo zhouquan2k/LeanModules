@@ -61,6 +61,9 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     @Meta(category = Category.Password)
     private String password;
 
+    @Meta(value = Type.String, label = "所属部门")
+    private String department;
+
     @Meta(category = Category.Phone, editable = True)
     private String phone;
 
@@ -89,6 +92,11 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    @Override
+    public String getPrimaryDepartment() {
+        return this.department;
     }
 
     @Override
