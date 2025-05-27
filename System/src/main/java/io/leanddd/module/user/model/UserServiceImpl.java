@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.inject.Named;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -110,6 +111,13 @@ class UserServiceImpl implements UserService {
         Util.check(Objects.equals(Context.getUserId(), user.getUserId()));
         var userDo = repository.get(Context.getUserId()).orElseThrow();
         userDo.updateMyProfile(user);
+        repository.save(userDo);
+    }
+
+    @Override
+    public void updateMyOptions(Map<String, Object> options) {
+        var userDo = repository.get(Context.getUserId()).orElseThrow();
+        userDo.updateMyOptions(options);
         repository.save(userDo);
     }
 

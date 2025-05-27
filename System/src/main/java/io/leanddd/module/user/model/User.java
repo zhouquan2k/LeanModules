@@ -1,6 +1,8 @@
 package io.leanddd.module.user.model;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.leanddd.component.common.BizException;
+import io.leanddd.component.common.JsonHelper;
 import io.leanddd.component.common.Util;
 import io.leanddd.component.data.BaseEntity;
 import io.leanddd.component.data.DictionaryItem;
@@ -73,6 +75,21 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     @Meta(value = Type.ToMany, persistable = False)
     private Set<String> permissions;
 
+    @Meta(value = Type.JSON)
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    private String optionsJson;
+
+    public void setOptions(Map<String, Object> options) {
+        optionsJson = JsonHelper.toJson(options);
+    }
+
+    public Map<String, Object> getOptions() {
+        var ret = JsonHelper.fromJson(optionsJson, new TypeReference<Map<String, Object>>() {
+        });
+        return ret == null ? new HashMap<>() : ret;
+    }
+
     // for UserDetails interface
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -125,6 +142,11 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
         this.password = passEncoder.encode(getDefaultPassword());
     }
 
+    @Override
+    public String getUserOptions() {
+        return optionsJson;
+    }
+
     private String getDefaultPassword() {
         return Context.getProperty("app.user.initialPassword");
     }
@@ -137,6 +159,15 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     public void updateMyProfile(io.leanddd.module.user.api.User user) {
         this.username = user.getUsername();
         this.phone = user.getPhone();
+    }
+
+    public void updateMyOptions(Map<String, Object> options) {
+        if (options == null) {
+            return;
+        }
+        var curOptions = this.getOptions();
+        curOptions.putAll(options);
+        this.setOptions(curOptions);
     }
 
     public void updateMyPassword(UpdatePasswordParams params) throws BizException {
