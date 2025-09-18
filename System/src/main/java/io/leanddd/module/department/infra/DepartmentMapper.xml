@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.leanddd.module.department.infra.DepartmentMapper">
+    
+    <resultMap id="Department" type="io.leanddd.module.department.model.Department">
+        <id column="department_id" property="departmentId" />
+    </resultMap>
+    <resultMap id="Example" type="io.leanddd.module.department.model.Department" extends="Department" autoMapping="true"/>
+
+    <select id="queryAll" resultMap="Department">
+        SELECT * FROM t_department order by department_id
+    </select>
+</mapper>

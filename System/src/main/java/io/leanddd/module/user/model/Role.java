@@ -36,6 +36,8 @@ public class Role extends BaseEntity<Role> implements DictionaryItem {
     private String roleName;
     @Meta(value = Type.Enum, editable = True)
     private Boolean enabled;
+
+    // TODO conflict with departmentID?
     @Meta(value = Type.RefID)
     private String orgId;
     @Meta(value = Type.Enum, listable = True, editable = True, searchable = True, nullable = False) //

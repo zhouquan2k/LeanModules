@@ -20,7 +20,15 @@ const Routes = [{
             path: 'role',
             meta: { title: '角色' },
             permission: 'role',
+
             component: (resolve) => require(['@sys/view/role'], resolve)
+        },
+        {
+            name: '部门',
+            path: 'department',
+            meta: { title: '部门' },
+            permission: 'department',
+            component: (resolve) => require(['@sys/view/Department'], resolve)
         },
         {
             name: '操作日志',

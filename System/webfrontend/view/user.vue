@@ -8,7 +8,7 @@
       </el-col>
       <el-col :span="orgId ? 20 : 24">
         <FullTable ref="full-table" entity="User" label="用户"
-          :searches="getEntityFields('User', [{ name: 'user' }, 'userCode', 'status', 'phone', { name: 'role' }])"
+          :searches="getEntityFields('User', [{ name: 'user' }, 'userCode', 'status', 'phone', { name: 'role' }, 'department'] )"
           :columns="[...getEntityFields('User', 'listable'), { name: 'roles', label: '角色' }]"
           :fixedSearchParams="{ userId: userId, roleId: roleId }" :searchMethod="onSearch" :formCols="1"
           :apis="user_api" :actions="actions" @reset="userId = null; roleId = null;" @assign-role="openAssignRolesDlg"

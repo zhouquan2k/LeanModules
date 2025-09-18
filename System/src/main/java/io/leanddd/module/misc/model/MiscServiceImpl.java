@@ -1,4 +1,4 @@
-package io.leanddd.module.misc;
+package io.leanddd.module.misc.model;
 
 import io.leanddd.component.common.Util;
 import io.leanddd.component.framework.Context;
