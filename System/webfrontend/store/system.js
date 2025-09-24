@@ -1,5 +1,6 @@
 import { login, logout, getInfo, getVersion } from '@sys/view/security_api.js';
 import { getAccessToken, setToken, removeToken, getRefreshToken } from '@/utils/auth'
+import { dictFormatter } from '@/utils/utils'
 
 const system = {
   state: {
@@ -10,9 +11,17 @@ const system = {
     roles: [],
     permissions: null,
     version: '',
+    title: '',
+    userOptions: {},
   },
 
   mutations: {
+    SET_TITLE: (state, title) => {
+      state.title = title
+    },
+    SET_OPTIONS: (state, options) => {
+      state.userOptions = options
+    },
     SET_DEPTID: (state, deptId) => {
       state.deptId = deptId
     },
@@ -42,8 +51,10 @@ const system = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
+      console.log('Login:', JSON.stringify(userInfo));
       return new Promise((resolve, reject) => {
         login(userInfo).then(user => {
+          console.log('After Login:', JSON.stringify(user));
           // 设置 token
           setToken({ accessToken: user.token });
           resolve()
@@ -52,18 +63,24 @@ const system = {
         })
       })
     },
+    SetTitle({ commit, state }, title) {
+      commit('SET_TITLE', title)
+    },
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo().then(user => {
           commit('SET_ROLES', user.roles)
           commit('SET_PERMISSIONS', user.permissions)
-
           commit('SET_DEPTID', user.deptId)
           commit('SET_ID', user.userId)
           commit('SET_NAME', user.loginName)
           commit('SET_NICKNAME', user.username)
           commit('SET_AVATAR', user.avatar)
+          const options = user.userOptions ?? {};
+          commit('SET_OPTIONS', options)
+          const title = `【${dictFormatter('Department', options.departmentId)}】`;
+          commit('SET_TITLE', title);
           resolve(user)
         }).catch(error => {
           // reject(error)
@@ -122,11 +139,13 @@ const system = {
         logout(state.token).then(() => {
           commit('SET_ROLES', [])
           commit('SET_PERMISSIONS', [])
+          commit('SET_OPTIONS', {})
           removeToken()
           resolve()
         }).catch(error => {
           commit('SET_ROLES', [])
           commit('SET_PERMISSIONS', [])
+          commit('SET_OPTIONS', {})
           removeToken()
           resolve()
           // removeToken()

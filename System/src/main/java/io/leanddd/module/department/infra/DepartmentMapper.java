@@ -12,7 +12,7 @@ public interface DepartmentMapper extends BaseMapper<Department> {
 
     static final String selectByExample = "select * from t_department a\n"
             + "${where}\n" //
-            + " order by a.department_code asc";
+            + " order by a.department_name asc";
 
     default List<Department> queryByExample(Map<String, Object> example) {
         return this.queryByExample(Department.class, example, selectByExample, Map.of());

@@ -5,7 +5,9 @@ import io.leanddd.component.common.Util;
 import io.leanddd.component.data.impl.DictionaryProvider;
 import io.leanddd.component.event.EntityCreatedEvent;
 import io.leanddd.component.event.EntityUpdatedEvent;
+import io.leanddd.component.framework.AuthInfo;
 import io.leanddd.component.framework.Context;
+import io.leanddd.component.framework.MetadataProvider;
 import io.leanddd.component.framework.Repository;
 import io.leanddd.component.meta.Command;
 import io.leanddd.component.meta.Metadata;
@@ -17,10 +19,7 @@ import io.leanddd.module.user.infra.RoleMapper;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Named;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 class UserPermissions {
     static final String UserRead = "read";
@@ -43,6 +42,7 @@ class UserServiceImpl implements UserService {
     private final RoleMapper roleMapper;
     private final DictionaryProvider<User> userDictionaryProvider;
     private final Repository<User> repository;
+    private final MetadataProvider metadataProvider;
 
     @Override
     public io.leanddd.module.user.api.User getById(String id) {
@@ -127,6 +127,21 @@ class UserServiceImpl implements UserService {
         var userDo = repository.get(Context.getUserId()).orElseThrow();
         userDo.updateMyPassword(params);
         repository.save(userDo);
+    }
+
+    @Override
+    public AuthInfo login(String userId, Map<String, Object> options) {
+        var userDo = repository.get(userId).orElseThrow();
+        userDo.enrichWithRoles(this.roleMapper::getRoleWithPermissions);
+        var metadata = this.metadataProvider.getMetadata(Locale.getDefault(), null);
+        var permissionMap = new HashMap<String, Metadata.PermissionDef>();
+        metadata.getServices().forEach(func -> {
+            func.getPermissions().forEach(perm -> {
+                permissionMap.put(func.getName() + "." + perm.getName(), perm);
+            });
+        });
+        userDo.login(options, permissionMap);
+        return repository.save(userDo);
     }
 }
 

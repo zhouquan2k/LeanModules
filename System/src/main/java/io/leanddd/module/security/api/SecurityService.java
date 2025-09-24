@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/api/security")
 public interface SecurityService {
@@ -36,5 +37,7 @@ public interface SecurityService {
         private String password;
 
         private String code;
+
+        private Map<String, Object> options;
     }
 }

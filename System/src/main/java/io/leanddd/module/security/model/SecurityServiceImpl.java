@@ -10,18 +10,17 @@ import io.leanddd.component.meta.Service;
 import io.leanddd.component.security.AuthResult;
 import io.leanddd.component.security.ITokenUtil;
 import io.leanddd.module.security.api.SecurityService;
+import io.leanddd.module.user.api.UserService;
 import io.leanddd.module.user.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +40,7 @@ public class SecurityServiceImpl implements SecurityService {
     protected final MetadataProvider metadataProvider;
     private final AuthenticationManager authenticationManager;
     private final ITokenUtil tokenUtil;
+    private final UserService userService;
 
 
     @Command(logParam = false)
@@ -48,26 +48,13 @@ public class SecurityServiceImpl implements SecurityService {
     public AuthInfo login(@Validated @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         var authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                 loginRequest.getPassword());
-
         var authentication = authenticationManager.authenticate(authenticationToken);
-        final UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        var authInfo = (AuthInfo) userDetails;
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        this.processUserPermissions(userDetails);
-        return tokenUtil.generateAuthResult(authInfo, request);
-    }
 
-    private void processUserPermissions(UserDetails user) {
-        var userDo = (User) user;
-        var metadata = this.metadataProvider.getMetadata(Locale.getDefault(), null);
-        var permissionMap = new HashMap<String, PermissionDef>();
-        metadata.getServices().forEach(func -> {
-            func.getPermissions().forEach(perm -> {
-                permissionMap.put(func.getName() + "." + perm.getName(), perm);
-            });
-        });
-        // TODO call domain outside package
-        userDo.initPermissions(permissionMap);
+        var options = loginRequest.getOptions();
+        final User userDetails = (User) authentication.getPrincipal();
+        var authInfo = (AuthInfo)userService.login(userDetails.getUserId(), options);
+        return tokenUtil.generateAuthResult(authInfo, request);
     }
 
     @Override

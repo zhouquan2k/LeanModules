@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.leanddd.module.user.infra.RoleMapper">
+    <resultMap id="RoleWithPermissions" type="io.leanddd.module.user.model.Role" autoMapping="true">
+        <id property="roleId" column="role_id"/>
+        <collection property="_permissions" resultMap="RolePermission" notNullColumn="role_permission_id">
+        </collection>
+    </resultMap>
+    <resultMap id="RolePermission" type="io.leanddd.module.user.model.Role$RolePermission"
+               autoMapping="true">
+        <id property="rolePermissionId" column="role_permission_id"/>
+    </resultMap>
+    
+    <select id="getRoleWithPermissions" resultMap="RoleWithPermissions">
+        select *
+        from t_role r
+        left join t_role_permission rp on r.role_id = rp.role_id
+        where r.role_id = #{roleId}
+    </select>
+</mapper>

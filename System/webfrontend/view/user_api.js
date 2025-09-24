@@ -29,6 +29,7 @@ export default class UserApi extends CrudApi {
         });
     }
 
+    // TODO should move to security_api.js?
     async getMyProfile() {
         return await request({
             url: `${this.baseUrl}/my`,
@@ -41,6 +42,14 @@ export default class UserApi extends CrudApi {
             url: `${this.baseUrl}/my`,
             method: 'put',
             data: user,
+        });
+    }
+
+    async updateUserOptions(options) {
+        return await request({
+            url: `${this.baseUrl}/my/options`,
+            method: 'put',
+            data: options,
         });
     }
 

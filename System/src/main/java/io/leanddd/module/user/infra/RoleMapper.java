@@ -15,6 +15,8 @@ public interface RoleMapper extends BaseMapper<Role> {
     @Select("select * from t_role where role_id=#{roleId}")
     Role getById(String roleId);
 
+    Role getRoleWithPermissions(String roleId);
+
     @Select("select * from t_role where org_id = #{orgId} or role_type = 'GroupPublic'")
     List<Role> queryByOrgId(@Param("orgId") String orgId);
 

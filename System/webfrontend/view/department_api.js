@@ -23,6 +23,14 @@ export default class DepartmentApi extends CrudApi {
             data: { targetDepartmentId }
         });
     }
+
+    async getDepartments(params) {
+        return await request({
+            url: `/public/departments`,
+            method: 'get',
+            params
+        });
+    }
 }
 
 export const departmentApi = new DepartmentApi();

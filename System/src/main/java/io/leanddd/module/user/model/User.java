@@ -72,6 +72,9 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     @Meta(value = Type.String, editable = True)
     private String remark;
 
+    @Meta(value = Type.Timestamp, label = "最后登录时间", editable = False)
+    private Date lastLoginTime;
+
     @Meta(value = Type.ToMany, persistable = False)
     private Set<String> permissions;
 
@@ -143,8 +146,8 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     }
 
     @Override
-    public String getUserOptions() {
-        return optionsJson;
+    public Map<String,Object> getUserOptions() {
+        return this.getOptions();
     }
 
     private String getDefaultPassword() {
@@ -200,7 +203,7 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
         this.roles.removeIf(role -> Objects.equals(role.getOrgId(), orgId));
     }
 
-    public void initPermissions(Map<String, PermissionDef> permissionDefMap) {
+    private void initPermissions(Map<String, PermissionDef> permissionDefMap) {
         Set<String> permissions = new HashSet<String>();
         for (var ur : roles) {
             var role = ur.getRole();
@@ -217,6 +220,14 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
                 }
         }
         this.permissions = permissions;
+    }
+
+    public void login(Map<String, Object> options, Map<String, PermissionDef> permissionDefMap) {
+        this.lastLoginTime = new Date();
+        Map<String, Object> curOptions = this.getOptions() == null ? new HashMap<>() : this.getOptions();
+        curOptions.putAll(options);
+        this.setOptions(curOptions);
+        this.initPermissions(permissionDefMap);
     }
 
     @MetaEntity(tableName = "t_user_role")

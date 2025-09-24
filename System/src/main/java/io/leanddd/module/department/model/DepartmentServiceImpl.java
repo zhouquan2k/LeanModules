@@ -3,12 +3,9 @@ package io.leanddd.module.department.model;
 import io.leanddd.component.framework.Repository;
 import io.leanddd.component.meta.Service;
 import io.leanddd.module.department.api.DepartmentService;
-import io.leanddd.module.department.infra.DepartmentMapper;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Named;
-import java.util.List;
-import java.util.Map;
 
 @Named
 @Service
@@ -16,12 +13,6 @@ import java.util.Map;
 public class DepartmentServiceImpl implements DepartmentService {
 
     private final Repository<Department> departmentRepository;
-    private final DepartmentMapper departmentMapper;
-
-    @Override
-    public List<Department> getDepartments(Map<String, Object> params) {
-        return departmentMapper.queryByExample(params);
-    }
 
     @Override
     public Department getDepartment(String departmentId) {
