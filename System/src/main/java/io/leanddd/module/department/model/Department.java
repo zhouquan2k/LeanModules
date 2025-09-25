@@ -26,6 +26,9 @@ public class Department extends BaseEntity<Department> implements DictionaryItem
     @Meta(value = Type.String, label = "部门名称", nullable = False, searchable = True)
     private String departmentName;
 
+    @Meta(value = Type.String, label = "部门编码", searchable = True, listable = True)
+    private String departmentCode;
+
     @Meta(value = Type.Dictionary, label = "部门类型", refData = "DepartmentType")
     private String departmentType;
     
@@ -51,7 +54,7 @@ public class Department extends BaseEntity<Department> implements DictionaryItem
 
     @Override
     public Object getValue() {
-        return departmentId;
+        return departmentCode;
     }
 
     @Override
