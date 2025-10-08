@@ -6,4 +6,13 @@
     <version>${revision}</version>
   </parent>
   <artifactId>File</artifactId>
+  
+  <dependencies>
+    <!-- AWS S3 SDK for SeaweedFS S3 compatibility -->
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>s3</artifactId>
+      <version>2.20.162</version>
+    </dependency>
+  </dependencies>
 </project>

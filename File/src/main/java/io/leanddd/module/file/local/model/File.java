@@ -4,6 +4,7 @@ import io.leanddd.component.data.BaseEntity;
 import io.leanddd.component.meta.Meta;
 import io.leanddd.component.meta.Meta.Type;
 import io.leanddd.component.meta.MetaEntity;
+import io.leanddd.module.file.api.FileMeta;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class File extends BaseEntity<File> {
+public class File extends BaseEntity<File> implements FileMeta {
     private static final long serialVersionUID = 1L;
     @Meta(Type.ID)
     private String fileId;
@@ -30,4 +31,13 @@ public class File extends BaseEntity<File> {
     private String mimeType;
     @Meta(Type.String)
     private String accessUrl;
+
+    @Override
+    public String getId() {
+        return fileId;
+    }
+    @Override
+    public String getKey() {
+        return path;
+    }
 }

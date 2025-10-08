@@ -1,37 +1,38 @@
 package io.leanddd.module.file.local.model;
 
 import io.leanddd.component.common.Util;
-import io.leanddd.module.file.model.FileManagerSpi;
+import io.leanddd.module.file.api.FileManagerSpi;
+import io.leanddd.module.file.api.FileMeta;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @RequiredArgsConstructor
-@Component
 public class FileManagerLocalFileSystem implements FileManagerSpi {
 
     @Value("${app.file.local.basePath}")
     private String fileRootPath;
     private final FileRepository repository;
     private final ConvertFile convert = Mappers.getMapper(ConvertFile.class);
-    ;
 
-    private Path resolve(File file) {
+    private Path resolve(FileMeta file) {
         Path uploadPath = Paths.get(fileRootPath + "/" + file.getPath());
-        return uploadPath.resolve(String.format("f%s_%s", file.getFileId(), file.getFileName()));
+        return uploadPath.resolve(String.format("f%s_%s", file.getId(), file.getFileName()));
+    }
+
+    @Override
+    public FileMeta getMeta(String id) {
+        return repository.findById(id).orElseThrow();
     }
 
     @Override
@@ -64,23 +65,11 @@ public class FileManagerLocalFileSystem implements FileManagerSpi {
     }
 
     @Override
-    public void download(String id, HttpServletResponse response) {
+    public void stream(FileMeta meta, HttpServletResponse response) {
 
-        File file = repository.findById(id).orElseThrow();
-
-        Path filePath = resolve(file);
+        Path filePath = resolve(meta);
         try (BufferedInputStream inStream = new BufferedInputStream(Files.newInputStream(filePath));
              BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream())) {
-
-            if (file.getMimeType().startsWith("image/")) {
-                response.setContentType(file.getMimeType());
-            } else if (file.getMimeType().startsWith("application/pdf")) {
-                response.setContentType(file.getMimeType());
-            } else {
-                response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
-                response.setHeader("Content-Disposition",
-                        "attachment;filename=" + URLEncoder.encode(file.getFileName(), "UTF-8"));
-            }
 
             byte[] buffer = new byte[10240];
             int length;
