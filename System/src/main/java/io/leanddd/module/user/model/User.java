@@ -225,7 +225,7 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     public void login(Map<String, Object> options, Map<String, PermissionDef> permissionDefMap) {
         this.lastLoginTime = new Date();
         Map<String, Object> curOptions = this.getOptions() == null ? new HashMap<>() : this.getOptions();
-        curOptions.putAll(options);
+        if (options != null) curOptions.putAll(options);
         this.setOptions(curOptions);
         this.initPermissions(permissionDefMap);
     }
