@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 @Named
@@ -30,9 +31,19 @@ public class FileServiceImpl implements FileService {
         return fileManager.upload(file, path);
     }
 
+    @Override
     public void viewFile(String id, HttpServletResponse response) {
         var fileMeta = fileManager.getMeta(id);
         response.setContentType(fileMeta.getMimeType());
+        fileManager.stream(fileMeta, response);
+    }
+
+    @Override
+    public void viewFileEx(String id, String filename, HttpServletResponse response) throws UnsupportedEncodingException {
+        var fileMeta = fileManager.getMeta(id);
+        response.setContentType(fileMeta.getMimeType());
+        response.setHeader("Content-Disposition",
+                "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
         fileManager.stream(fileMeta, response);
     }
 

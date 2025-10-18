@@ -26,8 +26,8 @@ import java.io.IOException;
 // @RequiredArgsConstructor
 public class S3FileManager implements FileManagerSpi {
 
-    @Value("${app.file.s3.bucket:default}")
-    protected String bucket;
+    // @Value("${app.file.s3.bucket:default}")
+    // protected String bucket;
 
     @Value("${app.file.s3.keyPrefix:}")
     protected String keyPrefix;
@@ -46,7 +46,9 @@ public class S3FileManager implements FileManagerSpi {
     /**
      * 打开S3对象输入流
      */
-    protected ResponseInputStream<GetObjectResponse> openS3ObjectStream(String key) {
+    protected ResponseInputStream<GetObjectResponse> openS3ObjectStream(String path) {
+        var bucket = path.substring(0, path.indexOf('/'));
+        var key = path.substring(path.indexOf('/') + 1);
         GetObjectRequest request = GetObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
@@ -62,8 +64,8 @@ public class S3FileManager implements FileManagerSpi {
     @Override
     public void stream(FileMeta meta, HttpServletResponse response) {
         String key = meta.getKey();
-        
-        try (ResponseInputStream<GetObjectResponse> s3Stream = openS3ObjectStream(key);
+        String bucket = meta.getPath().substring(0, meta.getPath().indexOf('/'));
+        try (ResponseInputStream<GetObjectResponse> s3Stream = openS3ObjectStream(meta.getPath());
              BufferedInputStream inStream = new BufferedInputStream(s3Stream);
              BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream())) {
 
@@ -111,7 +113,9 @@ public class S3FileManager implements FileManagerSpi {
     /**
      * 上传文件到S3（供子类调用）
      */
-    protected void uploadToS3(String key, MultipartFile file) {
+    protected void uploadToS3(String path, MultipartFile file) {
+        var bucket = path.substring(0, path.indexOf('/'));
+        var key = path.substring(path.indexOf('/') + 1);
         try {
             PutObjectRequest request = PutObjectRequest.builder()
                     .bucket(bucket)
@@ -133,7 +137,9 @@ public class S3FileManager implements FileManagerSpi {
     /**
      * 从S3删除文件（供子类调用）
      */
-    protected void deleteFromS3(String key) {
+    protected void deleteFromS3(String path) {
+        var bucket = path.substring(0, path.indexOf('/'));
+        var key = path.substring(path.indexOf('/') + 1);
         try {
             DeleteObjectRequest request = DeleteObjectRequest.builder()
                     .bucket(bucket)
