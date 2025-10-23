@@ -63,7 +63,7 @@ class UserServiceImpl implements UserService {
         userDo.enrichWithRoles(this.roleMapper::getById);
         var ret = convert.doToVo(repository.save(userDo));
         this.userDictionaryProvider.refresh();
-        Context.publishEvent(new EntityCreatedEvent(ret));
+        Context.publishEvent(new EntityCreatedEvent(user));
         return ret;
     }
 
@@ -104,6 +104,12 @@ class UserServiceImpl implements UserService {
         user.enrichWithRoles(this.roleMapper::getById);
         var ret = convert.doToVo(repository.save(user));
         Context.publishEvent(new EntityUpdatedEvent(ret));
+    }
+
+    @Override
+    public void activate(String userId) {
+        var userDo = repository.get(userId).orElseThrow();
+        userDo.activateAfterRegister();
     }
 
     @Override

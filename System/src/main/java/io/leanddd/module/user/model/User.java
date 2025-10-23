@@ -51,6 +51,9 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     @Meta(category = Category.PersonName, nullable = False)
     private String username;
 
+    @Meta(value = Type.String)
+    private String email;
+
     @Meta(value = Type.String, editable = True, searchable = True)
     private String userCode;
 
@@ -142,7 +145,7 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
 
     @Override
     public void init() {
-        this.password = passEncoder.encode(getDefaultPassword());
+        this.password = passEncoder.encode(Util.isEmpty(this.password) ? getDefaultPassword() : this.password);
     }
 
     @Override
@@ -187,6 +190,11 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
         this.roles.forEach(userRole -> {
             userRole.setRole(func.apply(userRole.getRoleId()));
         });
+    }
+
+    public void activateAfterRegister() {
+        Util.checkBiz(this.status == UserStatus.RegisterPending, Util.BusinessRuleError, "User %s is not pending", userId);
+        this.status = UserStatus.Active;
     }
 
     // only update roles (in input param) for specified orgId

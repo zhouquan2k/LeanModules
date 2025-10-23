@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,15 @@ public interface SecurityService {
     @GetMapping("/functions")
     List<ServiceDef> getAllFunctionDefs();
 
+    @PostMapping("/register/send-code")
+    void sendRegisterCode(@RequestBody SendRegisterCodeRequest request);
+
+    @PostMapping("/register")
+    void register(@RequestBody RegisterRequest request);
+
+    @PostMapping("/register/verify")
+    void verifyRegister(@RequestBody VerifyRegisterRequest request);
+
     @Data
     public static class LoginRequest {
         @NotBlank
@@ -39,5 +49,42 @@ public interface SecurityService {
         private String code;
 
         private Map<String, Object> options;
+    }
+
+    @Data
+    class SendRegisterCodeRequest {
+        @NotBlank
+        @Email
+        private String email;
+    }
+
+    @Data
+    class RegisterRequest {
+        @NotBlank
+        @javax.validation.constraints.Pattern(regexp = "^[A-Za-z0-9_.-]{3,}$", message = "登录名需由字母、数字或 _.- 组成，长度至少 3")
+        private String loginName;
+
+        @NotBlank
+        private String username;
+
+        @NotBlank
+        @Email
+        private String email;
+
+        @NotBlank
+        private String password;
+
+        @NotBlank
+        private String code;
+    }
+
+    @Data
+    class VerifyRegisterRequest {
+        @NotBlank
+        @Email
+        private String email;
+
+        @NotBlank
+        private String code;
     }
 }
