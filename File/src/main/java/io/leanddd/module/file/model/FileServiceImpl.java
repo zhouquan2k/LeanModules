@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -32,30 +33,30 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void viewFile(String id, HttpServletResponse response) {
+    public void viewFile(String id, HttpServletRequest request, HttpServletResponse response) {
         var fileMeta = fileManager.getMeta(id);
         response.setContentType(fileMeta.getMimeType());
-        fileManager.stream(fileMeta, response);
+        fileManager.stream(fileMeta, request, response);
     }
 
     @Override
-    public void viewFileEx(String id, String filename, HttpServletResponse response) throws UnsupportedEncodingException {
+    public void viewFileEx(String id, String filename, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         var fileMeta = fileManager.getMeta(id);
         response.setContentType(fileMeta.getMimeType());
         response.setHeader("Content-Disposition",
                 "attachment;filename=" + URLEncoder.encode(filename, "UTF-8"));
-        fileManager.stream(fileMeta, response);
+        fileManager.stream(fileMeta, request, response);
     }
 
     @Override
     @Command(logParam = false)
-    public void downloadFile(String id, HttpServletResponse response) {
+    public void downloadFile(String id, HttpServletRequest request, HttpServletResponse response) {
         try {
             var fileMeta = fileManager.getMeta(id);
             response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
             response.setHeader("Content-Disposition",
                     "attachment;filename=" + URLEncoder.encode(fileMeta.getFileName(), "UTF-8"));
-            fileManager.stream(fileMeta, response);
+            fileManager.stream(fileMeta, request, response);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

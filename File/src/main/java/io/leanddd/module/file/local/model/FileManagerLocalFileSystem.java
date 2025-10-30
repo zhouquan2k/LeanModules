@@ -8,6 +8,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -65,11 +66,15 @@ public class FileManagerLocalFileSystem implements FileManagerSpi {
     }
 
     @Override
-    public void stream(FileMeta meta, HttpServletResponse response) {
+    public void stream(FileMeta meta, HttpServletRequest request, HttpServletResponse response) {
 
         Path filePath = resolve(meta);
+        response.setHeader("Accept-Ranges", "bytes");
         try (BufferedInputStream inStream = new BufferedInputStream(Files.newInputStream(filePath));
              BufferedOutputStream outStream = new BufferedOutputStream(response.getOutputStream())) {
+
+            long fileSize = Files.size(filePath);
+            response.setHeader("Content-Length", String.valueOf(fileSize));
 
             byte[] buffer = new byte[10240];
             int length;
