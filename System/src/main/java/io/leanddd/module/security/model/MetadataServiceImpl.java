@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.inject.Named;
 import java.util.Locale;
+import java.util.Map;
 
 @Service(type = Type.Mixed)
 @RequiredArgsConstructor
@@ -20,6 +21,11 @@ public class MetadataServiceImpl implements MetadataService {
     @Override
     public Metadata getMetadata(Locale locale) {
         return metadataProvider.getMetadata(locale, null);
+    }
+
+    @Override
+    public Map<String, String> getEnvironmentVariables() {
+        return System.getenv();
     }
 
 }

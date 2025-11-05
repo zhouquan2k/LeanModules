@@ -6,10 +6,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Locale;
+import java.util.Map;
 
-@RequestMapping("/api/public/metadata")
+@RequestMapping("/api/public")
 public interface MetadataService {
 
-    @GetMapping
+    @GetMapping("/metadata")
     Metadata getMetadata(@RequestParam(name = "lang", required = false, defaultValue = "en") Locale locale);
+
+
+    @GetMapping("/env")
+    Map<String, String> getEnvironmentVariables();
 }
