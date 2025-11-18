@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     async fetchData(params) {
-      return await departmentApi.list(params, {This: this, loading: true})
+      return await departmentApi.getDepartments(params, {This: this, loading: true})
     },
     onAdd() {
       this.$refs.table.showAddDialog();
