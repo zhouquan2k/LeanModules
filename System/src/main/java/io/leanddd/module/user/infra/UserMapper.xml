@@ -68,4 +68,11 @@
         left join t_user_role ur on u.user_id = ur.user_id
         where ur.org_id = #{orgId}
     </select>
+
+    <select id="queryUsersByDepartment" resultMap="UserWithRoles">
+        select *
+        from t_user u
+        left join t_user_role ur on u.user_id = ur.user_id
+        where u.department = #{departmentId}
+    </select>
 </mapper>

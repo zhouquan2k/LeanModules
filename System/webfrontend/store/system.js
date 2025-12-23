@@ -72,18 +72,18 @@ const system = {
         getInfo().then(user => {
           commit('SET_ROLES', user.roles)
           commit('SET_PERMISSIONS', user.permissions)
-          commit('SET_DEPTID', user.deptId)
+          commit('SET_DEPTID', user.primaryDepartment)
           commit('SET_ID', user.userId)
           commit('SET_NAME', user.loginName)
           commit('SET_NICKNAME', user.username)
           commit('SET_AVATAR', user.avatar)
           const options = user.userOptions ?? {};
           commit('SET_OPTIONS', options)
-          const title = `【${dictFormatter('Department', options.departmentId)}】`;
+          const title = `【${dictFormatter('Department', user.department)}】`;
           commit('SET_TITLE', title);
           resolve(user)
         }).catch(error => {
-          // reject(error)
+          reject(error)
         })
       })
     },

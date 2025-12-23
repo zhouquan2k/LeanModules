@@ -51,12 +51,16 @@ class UserQueryServiceImpl implements UserQueryService, UserDetailsService {
     }
 
     @Override
+    public List<io.leanddd.module.user.api.User> getUsersByDepartment(String departmentId) {
+        return convert.doToVo(userMapper.queryUsersByDepartment(departmentId));
+    }
+
+    @Override
     public io.leanddd.module.user.api.User getMyProfile() {
         var userId = Context.getUserId();
         return convert.doToVo(userMapper.getUser(userId));
     }
 
 }
-
 
 

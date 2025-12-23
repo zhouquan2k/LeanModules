@@ -40,6 +40,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     List<User> queryUsersByOrg(String orgId);
 
+    List<User> queryUsersByDepartment(String departmentId);
+
 
 }
-

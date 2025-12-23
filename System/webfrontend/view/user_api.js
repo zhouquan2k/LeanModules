@@ -61,5 +61,15 @@ export default class UserApi extends CrudApi {
         });
     }
 
+    async getUsersByDepartment(departmentId) {
+        if (!departmentId) {
+            return [];
+        }
+        return await request({
+            url: `${this.baseUrl}/department/${departmentId}`,
+            method: 'get'
+        });
+    }
+
 }
 export const userApi = new UserApi();

@@ -13,12 +13,15 @@ import io.leanddd.component.meta.Command;
 import io.leanddd.component.meta.Metadata;
 import io.leanddd.component.meta.Service;
 import io.leanddd.component.meta.Service.Type;
+import io.leanddd.component.security.AuthResult;
 import io.leanddd.module.user.api.UserService;
 import io.leanddd.module.user.infra.ConvertUser;
 import io.leanddd.module.user.infra.RoleMapper;
 import lombok.RequiredArgsConstructor;
 
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 class UserPermissions {
@@ -121,9 +124,16 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateMyOptions(Map<String, Object> options) {
+    public void updateMyOptions(Map<String, Object> options, HttpServletRequest request) {
         var userDo = repository.get(Context.getUserId()).orElseThrow();
         userDo.updateMyOptions(options);
+        // update session object
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            var authResult =  (AuthResult)session.getAttribute("_authInfo");
+            authResult.setUserOptions(userDo.getUserOptions());
+            session.setAttribute("_authInfo", authResult);
+        }
         repository.save(userDo);
     }
 
