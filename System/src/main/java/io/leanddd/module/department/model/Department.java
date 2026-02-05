@@ -49,7 +49,7 @@ public class Department extends BaseEntity<Department> implements DictionaryItem
     // DictionaryItem implementation
     @Override
     public String getType() {
-        return "Department";
+        return this.departmentType;
     }
 
     @Override
