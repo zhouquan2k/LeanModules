@@ -66,7 +66,7 @@ public class User extends BaseEntity<User> implements UserDetails, AuthInfo, Dic
     @Meta(category = Category.Password)
     private String password;
 
-    @Meta(value = Type.Dictionary, label = "所属部门", editable = True, refData = "Department", searchable = True)
+    @Meta(value = Type.Dictionary, label = "所属药房", editable = True, refData = "PHARMACY", searchable = True)
     private String department;
 
     @Meta(category = Category.Phone, editable = True)

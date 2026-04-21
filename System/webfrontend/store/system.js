@@ -79,7 +79,7 @@ const system = {
           commit('SET_AVATAR', user.avatar)
           const options = user.userOptions ?? {};
           commit('SET_OPTIONS', options)
-          const title = `【${dictFormatter('Department', user.department)}】`;
+          const title = `【${dictFormatter('PHARMACY', user.department)}】`;
           commit('SET_TITLE', title);
           resolve(user)
         }).catch(error => {
