@@ -72,6 +72,7 @@ class UserServiceImpl implements UserService {
     public io.leanddd.module.user.api.User update(String id, io.leanddd.module.user.api.User user) {
         User userDo = repository.get(id).orElseThrow();
         userDo.update(user);
+        userDo.enrichWithRoles(this.roleMapper::getById);
         var ret = convert.doToVo(repository.save(userDo));
         this.userDictionaryProvider.refresh();
         Context.publishEvent(new EntityUpdatedEvent(ret));
